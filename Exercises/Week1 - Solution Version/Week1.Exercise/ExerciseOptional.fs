@@ -63,18 +63,6 @@
             | false -> Com
         {FirstName = firstName; LastName=lastName; Email = email; EmailExtension = emailExtension}
 
-
-
-
-
-
-
-
-
-
-
-
-
     //TODO Take a string and split it by ';' return a list of the split values
     let splitStringBySemiColons (semiColonSepString : string) = semiColonSepString.Split ';' |> Array.toList
 
@@ -84,16 +72,6 @@
     let getExtensionPhrase = function
         | Com -> "Why do they have a COM domain Extension? meh."
         | CoUk -> "They have a UK domain Extension, YAY!"
-
-
-
-
-
-
-
-
-
-
 
 
     (*
@@ -112,23 +90,6 @@
     //TODO create a function that calls ParseContact then calls GetContactString with the result of ParseContact
     let transformContactString : (string -> string) = parseContact >> getContactString
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     (*
         
         TODO
@@ -148,26 +109,6 @@
         |> mapList transformContactString
         |> printList
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     let prettyPrintFSharpGroupRecords2 (recordsList : string list) =
         let transformContactStringAndPrint = parseContact >> getContactString >>  (printfn "%s")
         recordsList
@@ -177,21 +118,6 @@
         let transformContactStringAndPrint = parseContact >> getContactString >>  (printfn "%s")
         for record in recordsList do
             transformContactStringAndPrint record
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     let nameLength (contact: Contact) = contact.FirstName.Length + contact.LastName.Length
     let emailLength (contact: Contact) = contact.Email.Length
@@ -207,31 +133,6 @@
             | ({ CountContactsWithCoUk = count; TotalNumberOfContacts = total }, { EmailExtension = CoUk }) -> { longEmail with CountContactsWithCoUk = count + 1;  TotalNumberOfContacts = total + 1 }
             | ({ CountContactsWithCom = count; TotalNumberOfContacts = total }, { EmailExtension = Com }) -> { longEmail with CountContactsWithCom = count + 1; TotalNumberOfContacts = total + 1 }
         counted
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     (*
         TODO The following should print the following lines, based on the records list: 

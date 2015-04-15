@@ -1,7 +1,5 @@
 ﻿module Exercise
 
-//NOTE: Extra spacing has been added for going through the exercise in presentation
-
     //Part one: Reimplementing standard library functions
 
     // This is a hint and example that uses recursion, a cons pattern and a list pattern. Example from: Pattern Matching - https://msdn.microsoft.com/en-us/library/dd547125.aspx
@@ -19,59 +17,26 @@
         | head :: tail -> mapping head :: mapList mapping tail
         | [] -> []
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     let mapListGeneratorComprehension mapping list =
         [for a in list do yield mapping a]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //TODO Reimplement List.filter -> https://msdn.microsoft.com/en-us/library/ee370294.aspx
     // Fold takes a function to test each list element (function returns a boolean) and a list. Returns a new list containly only the elements for which the predicate returned true. 
     let rec filterList predicate list = 
         match list with
-        | head::tail when predicate(head) -> head :: (filterList predicate tail)
+        | head::tail when predicate head -> head :: filterList predicate tail
         | _::tail -> filterList predicate tail
         | [] -> []
-        
+
+
     //TODO Reimplement List.fold -> https://msdn.microsoft.com/en-us/library/ee353894.aspx
     // Takes a function to update the accumulated values given the input element, the initial value, and the list. returns the final accumulated value
     let rec foldList folder acc list = 
         match list with
         | head :: tail -> foldList folder (folder acc head) tail
         | [] -> acc
+
+
     //TODO Reimplement List.reduce
     // Takes a function to update the accumulated values given the input element and the list. returns the final accumulated value
     //Throws an ArgumentException if the list is empty (Use invalidArg function -> https://msdn.microsoft.com/en-us/library/dd233178.aspx ) 
@@ -81,53 +46,12 @@
         | head::tail -> foldList reducer head tail
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // List comprehension / Generator for other data structures
 
     let mapArrayGenerator mapping array = 
         [| for a in array do yield mapping a|]
     let mapSeqGenerator mapping sequence = 
         seq { for a in sequence do yield mapping a}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Tail Recursion
 
@@ -140,18 +64,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     let mapListTail mapping list = 
         let rec loop acc loopList = 
             match loopList with
@@ -159,6 +71,7 @@
             | head :: tail -> loop (mapping head :: acc) tail
         loop [] list
         
+    // See http://stackoverflow.com/questions/3248091/f-tail-recursive-function-example for continuation style
     let mapListCont mapping list = 
         let rec loop cont loopList = 
             match loopList with
