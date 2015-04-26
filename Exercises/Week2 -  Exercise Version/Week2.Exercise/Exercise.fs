@@ -4,14 +4,21 @@ open System.Drawing
 open System
 open Helpers
 
-let generateTree() = 
-    let trunk = { StartPoint= Point(1920/2,0); EndPoint = Point(1920/2,100) }
-    let child1 = { StartPoint= Point(1920/2,100); EndPoint = rotateWrtPoint (Point(1920/2,200))  (Point(1920/2,100)) 45.0<degree> }
-    let child2 = { StartPoint= Point(1920/2,100); EndPoint = rotateWrtPoint (Point(1920/2,200))  (Point(1920/2,100)) -45.0<degree> }
-    seq {
-        yield seq {yield trunk}
-        yield [ child1 ; child2 ] |> List.toSeq
-    }
+let rec generateTreeAtDepth(startX, startY, lineLength, angle, depth) =
+    let trunk = { StartPoint= Point(startX,startY); EndPoint = Point(startX,startY + lineLength) }
+    let child1 = { StartPoint= Point(trunk.EndPoint.X,trunk.EndPoint.Y); EndPoint = rotateWrtPoint (Point(trunk.EndPoint.X,trunk.EndPoint.Y + lineLength))  (Point(trunk.EndPoint.X,trunk.EndPoint.Y)) angle }
+    let child2 = { StartPoint= Point(trunk.EndPoint.X,trunk.EndPoint.Y); EndPoint = rotateWrtPoint (Point(trunk.EndPoint.X,trunk.EndPoint.Y + lineLength))  (Point(trunk.EndPoint.X,trunk.EndPoint.Y)) -angle }
+    match depth with
+    | 0 -> seq {
+            yield seq {yield trunk}
+            yield [ child1 ; child2 ] |> List.toSeq
+        }
+    | _ -> Seq.concat [
+            generateTreeAtDepth(child1.EndPoint.X, child1.EndPoint.Y, lineLength/2, angle, depth - 1);
+            generateTreeAtDepth(child2.EndPoint.X, child2.EndPoint.Y, lineLength/2, angle, depth - 1)]
+
+let generateTree(startX, startY, lineLength, angle) : seq<seq<Line>> = 
+    Seq.initInfinite(fun index -> generateTreeAtDepth(startX, startY, lineLength, angle, index) |> Seq.concat)
 
 let drawLine (graphics : Graphics) pen (line : Line) =
     graphics.DrawLine(pen,line.StartPoint,line.EndPoint)
@@ -26,7 +33,7 @@ let drawAndSaveFractalTree() =
     
     use graphics = Graphics.FromImage(bmp)
     let drawLine' = drawLine graphics blackPen //You might be able to think of a better style for this. Think of this like mathematical derivation f(x) -> f'(x)
-    generateTree() |> Seq.take 2 |> Seq.concat |> Seq.iter drawLine'
+    generateTree(width/2, 0, height / 4, 45.0<degree>) |> Seq.take 1 |> Seq.concat |> Seq.iter drawLine'
 
     bmp.Save("..\\..\\FractalTree.jpeg")
 
