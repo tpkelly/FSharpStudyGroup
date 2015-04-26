@@ -26,14 +26,16 @@ let drawLine (graphics : Graphics) pen (line : Line) =
 let drawAndSaveFractalTree() = 
     let width = 1920
     let height = 1080
-
+    let angle = 45.0
+    let angleDegrees = angle * 1.0<degree> // Coax into the type float<degree>
+    let lineLength = (int)((float)height / (2.0 * (1.0 + Math.Cos(angle * Math.PI / 180.0))))
     let bmp = new Bitmap(width,height)
 
     let blackPen = new Pen(Color.Black, 3.0f)
     
     use graphics = Graphics.FromImage(bmp)
     let drawLine' = drawLine graphics blackPen //You might be able to think of a better style for this. Think of this like mathematical derivation f(x) -> f'(x)
-    generateTree(width/2, 0, height / 4, 45.0<degree>) |> Seq.take 1 |> Seq.concat |> Seq.iter drawLine'
+    generateTree(width/2, 0, lineLength, angleDegrees) |> Seq.take 10 |> Seq.concat |> Seq.iter drawLine'
 
     bmp.Save("..\\..\\FractalTree.jpeg")
 
